@@ -1,0 +1,7 @@
+.env
+data/*
+rag-paper/*
+test.py
+app_v1.py
+output.json
+main.py
