@@ -63,7 +63,8 @@ cp .env.example .env
 Modify `.env` with your credentials:
 
 ```
-OPENAI_API_KEY=your_openai_api_key  
+OPENAI_API_KEY=your_openai_api_key 
+LANDING_API_KEY=your_landing_api_key 
 ```
 
 ## **Usage**
