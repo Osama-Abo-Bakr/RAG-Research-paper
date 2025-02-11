@@ -481,8 +481,8 @@ def main():
             with st.expander("📂 References from the Paper"):
                 for i, doc in enumerate(result["source_documents"][:2], 1):
                     st.write(f"📜 **Document {i}:**")
-                    st.write(doc.page_content)
-                    st.write("---")
+                    # st.write(doc.page_content)
+                    # st.write("---")
                     
                     file_id = doc.metadata["file_id"]
                     page_no = doc.metadata["page_no"]-1
@@ -512,7 +512,7 @@ def main():
                             cv2.rectangle(img, (x, y), (w, h), (0, 255, 0), 1)
                             
                         # Display the image
-                        st.image(img, caption=f"Page {doc.metadata['page_no']} with Bounding Boxes", use_column_width=True)
+                        st.image(img, caption=f"Page {doc.metadata['page_no']} with Bounding Boxes", use_column_width=False)
                             
 
         # Button to Download Summary
