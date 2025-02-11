@@ -8,3 +8,4 @@ langchain-community
 langchain-openai
 PyMuPDF
 fpdf2
+fpdf
