@@ -96,7 +96,6 @@ The app will launch in your web browser.
  ├── 📝 README.md         # Project documentation  
  ├── 📝 .env.example      # Example environment variables  
  ├── 📝 data/           # PDF and image storage  
- ├── 📝 wkhtmltopdf/      # Helper functions for install as pdf
 ```
 
 ## **License**
