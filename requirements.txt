@@ -6,6 +6,5 @@ faiss-cpu
 langchain
 langchain-community
 langchain-openai
-markdown2
-pdfkit
 PyMuPDF
+fpdf2

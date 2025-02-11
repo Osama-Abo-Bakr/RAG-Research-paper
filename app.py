@@ -4,9 +4,8 @@ import os
 import tempfile
 import base64
 import warnings
-import markdown2
 import json
-import pdfkit
+from fpdf import FPDF
 import fitz
 import cv2
 import requests
@@ -28,7 +27,6 @@ from langchain_core.prompts import PromptTemplate
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["OMP_NUM_THREADS"] = "1"
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-config = pdfkit.configuration(wkhtmltopdf=r"wkhtmltopdf/bin/wkhtmltopdf.exe")
 
 # Load environment variables once at startup
 load_dotenv()
@@ -270,19 +268,75 @@ def display_pdf_in_sidebar(pdf_uploader):
         except Exception as e:
             st.sidebar.error(f"An error occurred while displaying the PDF: {e}")
 
-
-def markdown_to_pdf(markdown_text):
+def markdown_to_pdf(content, file_name="paper_summary.pdf"):
     """
-    Converts a markdown string to a PDF and saves it as 'paper_summary.pdf'.
+    Converts Markdown content to a PDF file.
+
+    This function takes Markdown content as input, processes it line by line,
+    and generates a PDF file with formatted titles, subtitles, and text. The
+    PDF is saved with the name "paper_summary.pdf".
+
     Args:
-        markdown_text (str): The markdown text to convert to PDF.
+        content (str): The Markdown content to be converted into a PDF.
 
     Returns:
-        str: The path to the generated PDF file.
+        str: The name of the output PDF file.
+
+    Notes:
+        - Title lines starting with "# ", "## ", and "### " are formatted as
+          titles and subtitles of varying sizes.
+        - Text lines with "**" are treated as bold text.
+        - Lines starting with "- " are treated as bullet points.
+        - Unsupported characters are replaced to avoid encoding errors.
     """
-    html_content = markdown2.markdown(markdown_text)
-    pdfkit.from_string(html_content, 'paper_summary.pdf', configuration=config)
-    return 'paper_summary.pdf'
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    def safe_text(text):
+        """Encode text to avoid errors with unsupported characters."""
+        return text.encode('latin-1', 'replace').decode('latin-1')  # Replaces unsupported characters
+
+    def add_title(text, size=16):
+        pdf.set_font("Arial", style="B", size=size)
+        pdf.cell(0, 10, txt=safe_text(text), ln=True, align="C")
+        pdf.ln(5)
+
+    def add_subtitle(text, size=14):
+        pdf.set_font("Arial", style="B", size=size)
+        pdf.cell(0, 7, txt=safe_text(text), ln=True, align="L")
+        pdf.ln(4)
+
+    def add_text(text):
+        pdf.set_font("Arial", size=12)
+        pdf.multi_cell(0, 6, txt=safe_text(text))
+        pdf.ln(2)
+
+    lines = content.split("\n")
+    for line in lines:
+        line = line.strip()
+        if not line:
+            pdf.ln(3)
+            continue
+
+        if line.startswith("# "):
+            add_title(line[2:])
+        elif line.startswith("## "):
+            add_subtitle(line[3:], size=14)
+        elif line.startswith("### "):
+            add_subtitle(line[4:], size=12)
+        elif "**" in line:
+            line = line.replace("**", "")  # Remove Markdown bold markers
+            add_subtitle(line, size=12)
+        elif line.startswith("- "):
+            add_text("• " + line[2:])
+        else:
+            add_text(line)
+
+    pdf.close()
+    pdf.output(file_name, "F")
+    return file_name
 
 
 def extract_text_from_pdf(image_np):
