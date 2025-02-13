@@ -545,29 +545,31 @@ def main():
                     img = st.session_state.images[file_id][page_no]
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                     
-                    # Extract Best Chunks
-                    best_chunks = get_best_chunks(user_query=question,
-                                                  answer=result["answer"],
-                                                  image=img)
-                    
                     try:
-                        best_chunks = json.loads(best_chunks)
-                    except json.JSONDecodeError:
-                        st.error("❌ Failed to parse GPT-4o response. Ensure the model returns valid JSON.")
-                        best_chunks = {"best_chunks": []}  
-                    
-                    if len(best_chunks["best_chunks"]) > 0:
-                        st.subheader("🔎 Best Chunks")
-                        # st.json(best_chunks)
+                        # Extract Best Chunks
+                        best_chunks = get_best_chunks(user_query=question,
+                                                    answer=result["answer"],
+                                                    image=img)
                         
-                        for chunk in best_chunks["best_chunks"]:
-                            bbox = chunk["bbox"]
-                            x, y, w, h = bbox[0], bbox[1], bbox[2], bbox[3]
-                            cv2.rectangle(img, (x, y), (w, h), (0, 255, 0), 1)
+                        try:
+                            best_chunks = json.loads(best_chunks)
+                        except json.JSONDecodeError:
+                            st.error("❌ Failed to parse GPT-4o response. Ensure the model returns valid JSON.")
+                            best_chunks = {"best_chunks": []}  
+                        
+                        if len(best_chunks["best_chunks"]) > 0:
+                            st.subheader("🔎 Best Chunks")
+                            # st.json(best_chunks)
                             
-                        # Display the image
-                        st.image(img, caption=f"Page {doc.metadata['page_no']} with Bounding Boxes", use_column_width=False)
-                            
+                            for chunk in best_chunks["best_chunks"]:
+                                bbox = chunk["bbox"]
+                                x, y, w, h = bbox[0], bbox[1], bbox[2], bbox[3]
+                                cv2.rectangle(img, (x, y), (w, h), (0, 255, 0), 1)
+                                
+                            # Display the image
+                            st.image(img, caption=f"Page {doc.metadata['page_no']} with Bounding Boxes", use_column_width=False)
+                    except:
+                        st.warning("Failed to extract best chunks. Please try again.")    
 
         # Button to Download Summary
         if "summary" in st.session_state:
