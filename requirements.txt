@@ -9,3 +9,4 @@ langchain-openai
 PyMuPDF
 fpdf2
 fpdf
+streamlit-pdf-viewer

@@ -22,6 +22,7 @@ from langchain_community.vectorstores import FAISS
 from langchain.chains import ConversationalRetrievalChain
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import PromptTemplate
+from streamlit_pdf_viewer import pdf_viewer
 
 # Set environment variables
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -243,47 +244,32 @@ def load_qa_chain(vectorstore):
     )
 
 
-# def display_pdf_in_sidebar(pdf_uploader):
-#     """
-#     Displays a PDF in the Streamlit sidebar using an iframe.
-
-#     Args:
-#         pdf_uploader (UploadedFile): The PDF file to display.
-
-#     Returns:
-#         None
-#     """
-#     if pdf_uploader is not None:
-#         try:
-#             # Use the file's binary content for the viewer
-#             pdf_data = pdf_uploader.getvalue()
-
-#             # Encode PDF to base64 for rendering
-#             base64_pdf = base64.b64encode(pdf_data).decode("utf-8")
-
-#             # Display PDF in the sidebar
-#             pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600px" type="application/pdf"></iframe>'
-#             st.markdown(pdf_display, unsafe_allow_html=True)
-
-#         except Exception as e:
-#             st.sidebar.error(f"An error occurred while displaying the PDF: {e}")
-            
-
 def display_pdf_in_sidebar(pdf_uploader):
+    """
+    Displays a PDF in the Streamlit sidebar using an iframe.
+
+    Args:
+        pdf_uploader (UploadedFile): The PDF file to display.
+
+    Returns:
+        None
+    """
     if pdf_uploader is not None:
         try:
-            # Convert PDF to base64
-            pdf_data = pdf_uploader.getvalue()
-            base64_pdf = base64.b64encode(pdf_data).decode("utf-8")
+            # pdf_data = pdf_uploader.getvalue()
+            # base64_pdf = base64.b64encode(pdf_data).decode("utf-8")
 
-            # Create HTML for iframe
-            pdf_display = f"""
-            <embed src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600px" type="application/pdf">
-            """
-            st.markdown(pdf_display, unsafe_allow_html=True)
+            # # Display PDF in the sidebar
+            # pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600px" type="application/pdf"></iframe>'
+            # st.markdown(pdf_display, unsafe_allow_html=True)
+            
+            pdf_viewer(pdf_uploader.getvalue())
 
         except Exception as e:
             st.sidebar.error(f"An error occurred while displaying the PDF: {e}")
+            
+
+
 
 def markdown_to_pdf(content, file_name="paper_summary.pdf"):
     """
