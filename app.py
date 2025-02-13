@@ -580,6 +580,10 @@ def main():
                         file_name="paper_summary.pdf",
                         mime="application/pdf"
                     )
+    
+    else:
+        st.session_state.clear()
+        st.warning("Please upload a PDF first. 💾")
 
 
 if __name__ == "__main__":
