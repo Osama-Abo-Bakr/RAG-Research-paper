@@ -534,7 +534,7 @@ def main():
             # Display reference documents
             with st.expander("📂 References from the Paper"):
                 for i, doc in enumerate(result["source_documents"][:2], 1):
-                    st.write(f"📜 **Document {i}:**")
+                    # st.write(f"📜 **Document {i}:**")
                     # st.write(doc.page_content)
                     # st.write("---")
                     
@@ -570,16 +570,16 @@ def main():
                             
 
         # Button to Download Summary
-        if "summary" in st.session_state:
-            if st.sidebar.button("📥 Download Summary (PDF)."):
-                with open(st.session_state.pdf_path, "rb") as pdf:
-                    st.sidebar.download_button(
-                        label="📥 Download Summary (PDF).",
-                        data=pdf,
-                        # data=st.session_state.summary,
-                        file_name="paper_summary.pdf",
-                        mime="application/pdf"
-                    )
+        # if "summary" in st.session_state:
+        if st.sidebar.button("📥 Download Summary (PDF)."):
+            with open(st.session_state.pdf_path, "rb") as pdf:
+                st.sidebar.download_button(
+                    label="📥 Download Summary (PDF).",
+                    data=pdf,
+                    # data=st.session_state.summary,
+                    file_name="paper_summary.pdf",
+                    mime="application/pdf"
+                )
     
     else:
         st.session_state.clear()
