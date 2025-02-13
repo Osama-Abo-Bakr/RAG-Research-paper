@@ -570,8 +570,8 @@ def main():
                             
 
         # Button to Download Summary
-        # if "summary" in st.session_state:
-        if st.sidebar.button("📥 Download Summary (PDF)."):
+        if "summary" in st.session_state:
+        # if st.sidebar.button("📥 Download Summary (PDF)."):
             with open(st.session_state.pdf_path, "rb") as pdf:
                 st.sidebar.download_button(
                     label="📥 Download Summary (PDF).",
