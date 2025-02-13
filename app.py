@@ -334,8 +334,9 @@ def markdown_to_pdf(content, file_name="paper_summary.pdf"):
         else:
             add_text(line)
 
-    pdf.output(file_name, "F")
-    return file_name
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+    pdf.output(temp_file.name, "F")
+    return temp_file.name
 
 
 def extract_text_from_pdf(image_np):
