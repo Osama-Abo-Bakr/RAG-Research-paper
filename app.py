@@ -334,7 +334,6 @@ def markdown_to_pdf(content, file_name="paper_summary.pdf"):
         else:
             add_text(line)
 
-    pdf.close()
     pdf.output(file_name, "F")
     return file_name
 
@@ -482,7 +481,7 @@ def main():
             print("🚀 Creating Paper Summary...")
             # st.session_state.summary = st.session_state.final_text
             st.session_state.summary = summarize_text(st.session_state.final_text)
-            st.session_state.pdf_path = markdown_to_pdf(st.session_state.summary)
+            st.session_state.pdf_path = markdown_to_pdf(st.session_state.summary.replace("```markdown", "").replace("```", "").strip())
 
         if "chat_history" not in st.session_state:
             print("🚀 Creating Chat History...")
@@ -571,13 +570,15 @@ def main():
 
         # Button to Download Summary
         if "summary" in st.session_state:
-            st.sidebar.download_button(
-                label="📥 Download Summary (PDF).",
-                data=st.session_state.pdf_path,
-                # data=st.session_state.summary,
-                file_name="paper_summary.pdf",
-                mime="application/pdf"
-            )
+            if st.sidebar.button("📥 Download Summary (PDF)."):
+                with open(st.session_state.pdf_path, "rb") as pdf:
+                    st.sidebar.download_button(
+                        label="📥 Download Summary (PDF).",
+                        data=pdf,
+                        # data=st.session_state.summary,
+                        file_name="paper_summary.pdf",
+                        mime="application/pdf"
+                    )
 
 
 if __name__ == "__main__":
