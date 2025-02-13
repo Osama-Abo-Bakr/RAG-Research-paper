@@ -267,9 +267,6 @@ def display_pdf_in_sidebar(pdf_uploader):
 
         except Exception as e:
             st.sidebar.error(f"An error occurred while displaying the PDF: {e}")
-            
-
-
 
 def markdown_to_pdf(content, file_name="paper_summary.pdf"):
     """
@@ -493,22 +490,22 @@ def main():
 
         # Display summary in the sidebar
         if "summary" in st.session_state:
-            with st.expander("📑 Paper Summary:"):
+            with st.expander("Paper Summary:", icon="📑"):
                 st.write(st.session_state.summary.replace("```markdown", "").replace("```", "").strip())
             
             try:
                 selected_file = st.sidebar.multiselect(label="Select PDFs 📑", 
-                                                    options=st.session_state.names.keys(), 
-                                                    default=None, 
-                                                    max_selections=1)
+                                                       options=st.session_state.names.keys(), 
+                                                       default=None, 
+                                                       max_selections=1)
                 
-                with st.expander("📑 PDF Preview:"):
+                with st.expander("PDF Preview:", expanded=False, icon="📑"):
                     display_pdf_in_sidebar(st.session_state.names[selected_file[0]])
             except:
                 st.warning("Please Select a PDF first. 💾")
         
         if "images" in st.session_state:
-            with st.expander("📸 PDF Images Preview:"):
+            with st.expander("PDF Images Preview:", icon="📸"):
                 for i, image in enumerate(st.session_state.images[st.session_state.temp_paths[0]], 1):
                     st.image(image, caption=f"Page {i}")
                     
